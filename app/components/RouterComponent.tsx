@@ -10,8 +10,6 @@ export default function RouterComponent() {
     about: "About",
     contact: "Contact",
     dashboard: "Dashboard",
-    login: "Login",
-    register: "Register",
     topmovers: "Top Movers",
     watchlist: "Watchlist",
     portfolio: "Portfolio",
@@ -21,9 +19,9 @@ export default function RouterComponent() {
   return (
     <div className=" mr-6 md:mx-0">
       <div className="flex flex-row">
-        {pathArray.map((path: any) => {
+        {pathArray.map((path: any, index: number) => {
           return (
-            <div key={null}>
+            <div key={`path-${path}-${index}`}>
               <p className="text-xs text-[#1E1E1E] font-light mr-2">
                 <NavTransition href={`/${path}`} className="hover:underline">
                   {objectArray[path]

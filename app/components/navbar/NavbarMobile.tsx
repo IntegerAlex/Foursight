@@ -1,15 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { NavTransition } from "./NavTransition";
-import Hamburger from "./utils/Hamburger";
-import { getCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import { CiSearch } from "react-icons/ci";
 
 const NavbarMobile = (props: any) => {
   const router = useRouter();
-  const [logStatus, setLogStatus] = useState(false);
   function sleep(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
@@ -38,15 +35,6 @@ const NavbarMobile = (props: any) => {
     handleTransition(e, query, `/stocks?search=${query}`);
   }
 
-  useEffect(() => {
-    const token = getCookie("token");
-    if (token) {
-      setLogStatus(true);
-    } else {
-      setLogStatus(false);
-    }
-  }, [logStatus]);
-
   const [isVisible, setIsVisible] = useState(false);
 
   const handleButtonClick = () => {
@@ -70,17 +58,11 @@ const NavbarMobile = (props: any) => {
               <CiSearch className="text-[#037A68] cursor-pointer" />
             </button>
           </div>
-          {!logStatus && (
-            <NavTransition
-              href={logStatus ? "/logout" : "/signup"}
-              className="flex "
-            >
-              <button className="bg-[#037A68] flex items-center justify-center py-1 px-2 text-sm text-white rounded-md  ml-3">
-                Login/Register
-              </button>
-            </NavTransition>
-          )}
-          {logStatus && <Hamburger />}
+          <NavTransition href="/dashboard" className="flex">
+            <button className="bg-[#037A68] flex items-center justify-center py-1 px-2 text-sm text-white rounded-md ml-3">
+              Dashboard
+            </button>
+          </NavTransition>
         </div>
       </div>
       <div

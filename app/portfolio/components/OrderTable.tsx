@@ -22,36 +22,27 @@ export default function OrderTable(props: any) {
           </tr>
         </thead>
         <tbody>
-          {newArray.map((order: any) => {
-            return (
-              <tr key={order.scrip}>
-                <td className="text-start font-semibold">
-                  <NavTransition
-                    className=""
-                    href={`/stocks/${encodeURIComponent(order.scrip)}`}
-                  >
-                    {order.scrip}{" "}
-                  </NavTransition>
-                </td>
-                <td className="text-gray-600 font-semibold">
-                  {order.quantity}
-                </td>
-                <td
-                  className={`green-text font-semibold ${order.type === "SELL" ? "red-text" : "green-text"}`}
-                >
-                  ₹{order.price.toFixed(1)}
-                </td>
-                <td
-                  className={` font-semibold ${order.type === "SELL" ? "red-text" : "green-text"}`}
-                >
-                  {order.type}
-                </td>{" "}
-                <td className="green-text font-semibold">
-                  {new Date(order.time).toLocaleDateString()}
-                </td>
-              </tr>
-            );
-          })}
+          {data.slice(0, 10).map((order: any, index: number) => (
+            <tr key={`${order.scrip}-${order.time}-${index}`}>
+              <td className="py-2 px-4 border-b">{order.scrip}</td>
+              <td className="py-2 px-4 border-b">{order.quantity}</td>
+              <td className={`py-2 px-4 border-b ${order.type === "SELL" ? "red-text" : "green-text"}`}>
+                ₹{order.price}
+              </td>
+              <td className={`py-2 px-4 border-b ${order.type === "SELL" ? "red-text" : "green-text"}`}>
+                {order.type}
+              </td>
+              <td className="py-2 px-4 border-b">
+                {new Date(order.time).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

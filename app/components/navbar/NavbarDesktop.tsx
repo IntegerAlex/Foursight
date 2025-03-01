@@ -1,27 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import { getCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import { CiSearch } from "react-icons/ci";
 import { NavTransition } from "./NavTransition";
-import { useEffect, useState } from "react";
-import Hamburger from "./utils/Hamburger";
+import { useState } from "react";
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export default function NavbarDesktop(props: any) {
-  const [logStatus, setLogStatus] = useState(false);
-
-  useEffect(() => {
-    const token = getCookie("token");
-    if (token) {
-      setLogStatus(true);
-    } else {
-      setLogStatus(false);
-    }
-  }, [logStatus]);
-
   const router = useRouter();
   const handleTransition = async (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
@@ -75,17 +62,11 @@ export default function NavbarDesktop(props: any) {
               </button>
             </form>
           </div>
-          {!logStatus && (
-            <NavTransition
-              href={logStatus ? "/logout" : "/signup"}
-              className="flex "
-            >
-              <button className="hover:bg-teal-600 transition transition-all-0.5s bg-[#037A68] py-1 px-3 text-sm text-white rounded-md  ml-3">
-                Login/Register
-              </button>
-            </NavTransition>
-          )}
-          {logStatus && <Hamburger />}
+          <NavTransition href="/dashboard" className="flex">
+            <button className="hover:bg-teal-600 transition transition-all-0.5s bg-[#037A68] py-1 px-3 text-sm text-white rounded-md ml-3">
+              Dashboard
+            </button>
+          </NavTransition>
         </div>
       </div>
       <hr className="w-full mt-2" />

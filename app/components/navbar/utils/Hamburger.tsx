@@ -37,11 +37,6 @@ export default function Hamburger() {
       id: 3,
       href: "/topmovers",
     },
-    {
-      title: "Log Out",
-      id: 4,
-      href: "/logout",
-    },
   ];
 
   return (

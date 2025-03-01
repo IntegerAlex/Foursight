@@ -8,6 +8,7 @@ import { PieChart } from "react-minimal-pie-chart";
 import HoldingTable from "../components/HoldingTable";
 import OrderTable from "../components/OrderTable";
 import { NavTransition } from "@/app/components/navbar/NavTransition";
+import AddFundsButton from "../components/AddFundsButton";
 
 export default function Networth(props: any) {
   const { data, profitDetails } = props;
@@ -142,10 +143,15 @@ export default function Networth(props: any) {
           </h1>
         </div>
         <div className="rounded-md border-2 px-4 py-2">
-          <h1 className="text-[#696969] font-semibold mb-4 text-2xl">
-            {" "}
-            Remaining Cash
-          </h1>
+          <div className="flex justify-between items-center">
+            <h1 className="text-[#696969] font-semibold mb-4 text-2xl">
+              {" "}
+              Remaining Cash
+            </h1>
+            <div className="mb-4">
+              <AddFundsButton />
+            </div>
+          </div>
           <h1 className="text-[#5E5E5E] font-extrabold text-3xl">
             ₹ {data.remainingCash}
           </h1>

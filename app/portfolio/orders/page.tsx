@@ -1,60 +1,61 @@
 "use client";
-import { apiURL } from "@/app/components/apiURL";
 import Navbar from "@/app/components/navbar/Navbar";
 import { NavTransition } from "@/app/components/navbar/NavTransition";
-import parseJwt from "@/app/components/navbar/utils/parseJwt";
-import axios from "axios";
-import { getCookie } from "cookies-next";
+import { useCachedFetch } from "@/app/hooks/useLocalStorage";
+import { loadFromLocalStorage } from "@/app/utils/localStorage";
 import { useState, useEffect } from "react";
 
-export default function OrderPage() {
-  let token = getCookie("token");
-  const [details, setDetails] = useState([]);
-  useEffect(() => {
-    let tokenContents;
-    if (token) {
-      tokenContents = parseJwt(token);
-    }
+// Constants for localStorage keys
+const STORAGE_KEYS = {
+  ACCOUNT_DETAILS: 'portfolio_accountDetails'
+};
 
-    async function getNetworth() {
-      let results;
-      try {
-        results = await axios({
-          method: "post",
-          url: apiURL + "/auth/getAccountDetails",
-          headers: { Authorization: "Bearer " + token },
-        });
-        setDetails(results.data.orderBook.reverse());
-      } catch (err) {
-        console.error(err);
+export default function OrderPage() {
+  const [orderBook, setOrderBook] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  useEffect(() => {
+    // Load order book from localStorage
+    const loadData = () => {
+      const accountDetails = loadFromLocalStorage(STORAGE_KEYS.ACCOUNT_DETAILS);
+      if (accountDetails && accountDetails.orderBook) {
+        setOrderBook(accountDetails.orderBook.reverse() || []);
+      } else {
+        setOrderBook([]);
       }
-    }
-    getNetworth();
-  }, [token]);
+      setIsLoading(false);
+    };
+    
+    loadData();
+    
+    // Set up an interval to refresh data
+    const intervalId = setInterval(loadData, 5000);
+    
+    return () => clearInterval(intervalId);
+  }, []);
+
   return (
-    <div>
-      <div className="md:mx-[15%]">
-        <Navbar />
-        <div className="flex flex-col justify-start mt-4 mx-6 md:mx-0">
-          <div className="flex flex-row mb-4">
-            <p className="text-xs text-[#1E1E1E] font-light mr-2 ">
-              <NavTransition className="hover:underline" href={"/"}>
-                {" "}
-                Home
-              </NavTransition>{" "}
-              &gt;{" "}
-            </p>
-            <p className="text-xs text-[#1E1E1E] font-light mr-2">
-              <NavTransition className="hover:underline" href={"/portfolio"}>
-                {" "}
-                Portfolio{"  "}
-              </NavTransition>
-              &gt;
-            </p>
-            <p className="text-xs text-[#1E1E1E] font-light mr-2">
-              Order Book{" "}
-            </p>
+    <div className="md:mx-[15%]">
+      <Navbar />
+      <div className="flex flex-col justify-start mx-6 md:mx-0">
+        <div className="my-4 ">
+          <NavTransition
+            className="text-gray-500 font-semibold"
+            href="/portfolio"
+          >
+            ← Back to Portfolio
+          </NavTransition>
+        </div>
+        <div className="my-4">
+          <h1 className="text-3xl font-semibold">Order Book</h1>
+        </div>
+        {isLoading ? (
+          <div className="text-center py-4">Loading order book...</div>
+        ) : orderBook.length === 0 ? (
+          <div className="text-center py-4">
+            No orders found. Start trading to see your order history.
           </div>
+        ) : (
           <div className="w-full overflow-x-scroll">
             <table className="border-separate border-spacing-x-2 border-spacing-y-4 md:border-spacing-2 w-full text-sm text-center">
               <thead>
@@ -73,15 +74,15 @@ export default function OrderPage() {
                 </tr>
               </thead>
               <tbody>
-                {details.map((order: any) => {
+                {orderBook.map((order: any, index: number) => {
                   return (
-                    <tr key={order.scrip}>
+                    <tr key={`${order.symbol}-${order.timestamp}-${index}`}>
                       <td className="text-start font-semibold">
                         <NavTransition
                           className=""
-                          href={`/stocks/${encodeURIComponent(order.scrip)}`}
+                          href={`/stocks/${encodeURIComponent(order.symbol)}`}
                         >
-                          {order.scrip}{" "}
+                          {order.symbol}{" "}
                         </NavTransition>
                       </td>
                       <td className="text-gray-600 font-semibold">
@@ -98,10 +99,10 @@ export default function OrderPage() {
                         {order.type}
                       </td>{" "}
                       <td className="text-gray-600 font-semibold">
-                        {new Date(order.time).toLocaleDateString()}
+                        {new Date(order.timestamp).toLocaleDateString()}
                       </td>
                       <td className="text-gray-600 font-semibold">
-                        {new Date(order.time).toLocaleTimeString()}
+                        {new Date(order.timestamp).toLocaleTimeString()}
                       </td>
                     </tr>
                   );
@@ -109,7 +110,7 @@ export default function OrderPage() {
               </tbody>
             </table>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

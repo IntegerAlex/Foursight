@@ -5,7 +5,7 @@ export default function Homepage() {
   return (
     <div className="flex flex-col min-h-screen">
       <div className="text-center md:text-start flex flex-col md:mx-[15%]">
-        <Navbar logStatus={false} />
+        <Navbar />
       </div>
 
       <main className="flex-grow">
@@ -19,7 +19,7 @@ export default function Homepage() {
             skills.
           </p>
           <NavTransition
-            href="/signup"
+            href="/dashboard"
             className="px-6 py-3 text-white bg-[#037a68] rounded-md hover:bg-teal-800 transition transition-all-0.5s text-lg font-semibold"
           >
             Start Trading Now
@@ -102,14 +102,13 @@ export default function Homepage() {
             Ready to Start Your Trading Journey?
           </h2>
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            Join traders who are honing their skills with Foursight. Sign up
-            today and take your first step towards mastering the market.
+            Join traders who are honing their skills with Foursight. Start exploring the market today.
           </p>
           <NavTransition
-            href="/signup"
+            href="/dashboard"
             className="px-6 py-3 text-white bg-[#037a68] rounded-md hover:bg-teal-800 transition transition-all-0.5s text-lg font-semibold"
           >
-            Create Your Free Account
+            Go to Dashboard
             <svg
               className="ml-2 h-4 w-4 inline-block"
               xmlns="http://www.w3.org/2000/svg"
